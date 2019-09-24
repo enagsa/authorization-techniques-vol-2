@@ -13,7 +13,7 @@ abstract class TestCase extends BaseTestCase
     	return factory(User::class)->states('admin')->create();
     }
 
-    protected function createUser(){
-    	return factory(User::class)->create();
+    protected function createUser(array $attributes = []){
+    	return factory(User::class)->create($attributes);
     }
 }

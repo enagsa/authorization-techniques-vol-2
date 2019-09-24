@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function owns(Model $model, $foreignKey = 'user_id'){
         return $this->id === $model->$foreignKey;
     }
+
+    public function posts(){
+        return $this->hasMany(Post::class);
+    }
 }

@@ -11,22 +11,19 @@
 |
 */
 
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
-
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::put('admin/posts/{post}', function(Post $post, Request $request){
-	$post->update([
-		'title' => $request->title
-	]);
+Route::middleware('auth')
+	->namespace('Admin\\')
+	->prefix('admin')
+	->group(function(){
+		Route::get('posts', 'PostController@index');
+		Route::post('posts', 'PostController@store');
+		Route::put('posts/{post}', 'PostController@update');
+	});
 
-	return 'Post updated!';
-})->middleware('can:update,post');
+Auth::routes();
 
-Route::get('login', function(){
-	return 'Login';
-})->name('login');
+Route::get('/home', 'HomeController@index')->name('home');
