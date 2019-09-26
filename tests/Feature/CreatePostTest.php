@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Post;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -12,8 +13,6 @@ class CreatePostTest extends TestCase
 
     /** @test */
     function admins_can_create_posts(){
-        $this->withoutExceptionHandling();
-
         $this->actingAs($admin = $this->createAdmin());
 
         $this->post('admin/posts', [
@@ -22,9 +21,10 @@ class CreatePostTest extends TestCase
             ->assertStatus(201)
             ->assertSee('Post created');
 
-        $this->assertDatabaseHas('posts', [
-            'title' => 'New post'
-        ]);
+        tap(Post::first(), function($post){
+            $this->assertNotNull($post);
+            $this->assertSame('New post', $post->title);
+        });
     }
 
     /** @test */
@@ -51,8 +51,6 @@ class CreatePostTest extends TestCase
             ])
             ->assertStatus(403);
 
-        $this->assertDatabaseMissing('posts', [
-            'title' => 'New post'
-        ]);
+        $this->assertDatabaseEmpty('posts');
     }
 }

@@ -11,7 +11,12 @@ use App\Http\Controllers\Controller;
 class PostController extends Controller
 {
 	public function index(){
-		$posts = Post::paginate();
+		$posts = Post::query()
+			->with('author')
+			->unless(auth()->user()->isAdmin(), function($q){
+				$q->where('user_id', auth()->id());
+			})
+			->paginate();
 
 		return view('admin.posts.index', compact('posts'));
 	}
@@ -24,6 +29,12 @@ class PostController extends Controller
 		]);
 
 		return new Response('Post created', 201);
+	}
+
+	public function edit(Post $post){
+		$this->authorize('update', $post);
+
+		return 'Editar post';
 	}
 
 	public function update(Post $post, UpdatePostRequest $request){
