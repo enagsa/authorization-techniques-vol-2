@@ -6,10 +6,12 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, HasRolesAndAbilities;
 
     /**
      * The attributes that are mass assignable.
@@ -39,7 +41,7 @@ class User extends Authenticatable
     ];
 
     public function isAdmin(){
-        return $this->role === 'admin';
+        return $this->isAn('admin');
     }
 
     public function owns(Model $model, $foreignKey = 'user_id'){

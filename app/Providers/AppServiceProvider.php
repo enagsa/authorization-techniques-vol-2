@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +15,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        Bouncer::tables([
+            'abilities' => 'bouncer_abilities',
+            'permissions' => 'bouncer_permisions',
+            'roles' => 'bouncer_roles',
+            'assigned_roles' => 'bouncer_assigned_roles'
+        ]);
     }
 
     /**

@@ -13,6 +13,8 @@ class CreatePostTest extends TestCase
 
     /** @test */
     function admins_can_create_posts(){
+        $this->withoutExceptionHandling();
+        
         $this->actingAs($admin = $this->createAdmin());
 
         $this->post('admin/posts', [
