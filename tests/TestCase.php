@@ -30,7 +30,8 @@ abstract class TestCase extends BaseTestCase
     }
 
     protected function createAdmin(){
-    	$user = factory(User::class)->states('admin')->create();
+    	$user = factory(User::class)->create();
+        Bouncer::allow('admin')->everything();
         Bouncer::assign('admin')->to($user);
         return $user;
     }

@@ -11,8 +11,7 @@ class PostPolicy
     use HandlesAuthorization;
 
     public function before(User $user, $ability){
-        if($user->isAdmin())
-            return true;
+        
     }
 
     /**
@@ -46,7 +45,7 @@ class PostPolicy
      */
     public function create(User $user)
     {
-        return $user->role === 'author';
+        //return $user->isAn('author');
     }
 
     /**
@@ -58,7 +57,7 @@ class PostPolicy
      */
     public function update(User $user, Post $post)
     {
-        return $user->owns($post);
+        //return $user->can('update-own', Post::class) && $user->owns($post);
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
+use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class PostPolicyTest extends TestCase
 {
@@ -29,10 +30,13 @@ class PostPolicyTest extends TestCase
     }
 
     /** @test */
-    function authors_can_update_posts(){
+    function authors_can_update_posts_they_owns(){
     	// Preparación
     	$user = $this->createUser();
+        $user->assign('author');
     	$this->be($user);
+
+        Bouncer::allow('author')->to('update', Post::class);
     	
     	$post = factory(Post::class)->create([
     		'user_id' => $user->id
