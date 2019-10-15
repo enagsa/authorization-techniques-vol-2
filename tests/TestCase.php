@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\TestResponse;
 use Illuminate\Support\Str;
-use Silber\Bouncer\BouncerFacade as Bouncer;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -27,12 +26,13 @@ abstract class TestCase extends BaseTestCase
         TestResponse::macro('assertViewCollection', function($var){
             return new TestCollectionData($this->viewData($var));
         });
+
+        $this->seed('BouncerSeeder');
     }
 
     protected function createAdmin(){
     	$user = factory(User::class)->create();
-        Bouncer::allow('admin')->everything();
-        Bouncer::assign('admin')->to($user);
+        $user->assign('admin');
         return $user;
     }
 
@@ -44,8 +44,8 @@ abstract class TestCase extends BaseTestCase
     	$total = $this->getConnection($connection)->table($table)->count();
 
     	$this->assertSame(
-    		0, 
-    		$total, 
+    		0,
+    		$total,
     		sprintf("Failed asserting the table [%s] is empty. %s %s found.", $table, $total, Str::plural('row',$total))
     	);
     }

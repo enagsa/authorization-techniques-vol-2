@@ -30,7 +30,7 @@ class CreatePostTest extends TestCase
     /** @test */
     function authors_can_create_posts(){
         $this->actingAs($user = $this->createUser());
-        $user->allow('create', Post::class);
+        $user->assign('author');
 
         $this->post('admin/posts', [
                 'title' => 'New post'

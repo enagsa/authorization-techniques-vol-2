@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Post;
+use App\Models\{User,Post};
 use Illuminate\Database\Seeder;
 
 class PostSeeder extends Seeder
@@ -12,6 +12,10 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
+        factory(Post::class)->times(10)->create([
+            'user_id' => User::whereEmail('author@styde.net')->first()->id
+        ]);
+        
         factory(Post::class)->times(30)->create();
     }
 }

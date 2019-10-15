@@ -23,6 +23,7 @@ Route::middleware('auth')
 		Route::post('posts', 'PostController@store');
 		Route::get('posts/{post}/edit', 'PostController@edit')->name('posts.edit');
 		Route::put('posts/{post}', 'PostController@update');
+        Route::delete('posts/{post}', 'PostController@delete');
 	});
 
 Auth::routes();

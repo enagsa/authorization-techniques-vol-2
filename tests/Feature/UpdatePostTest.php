@@ -6,18 +6,10 @@ use Tests\TestCase;
 use App\Models\Post;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Silber\Bouncer\BouncerFacade as Bouncer;
 
 class UpdatePostTest extends TestCase
 {
     use RefreshDatabase;
-
-    public function setUp(): void{
-        parent::setUp();
-
-        Bouncer::allow('author')->toOwn(Post::class);
-        Bouncer::allow('editor')->to('update', Post::class);
-    }
 
     /** @test */
     function admins_can_update_posts(){
@@ -42,7 +34,7 @@ class UpdatePostTest extends TestCase
     /** @test */
     function authors_can_update_posts_they_own(){
         $user = $this->createUser();
-        $user->assign('author');       
+        $user->assign('author');
 
         $post = factory(Post::class)->create([
             'user_id' => $user->id
@@ -88,7 +80,7 @@ class UpdatePostTest extends TestCase
     function editors_can_update_posts(){
         $user = $this->createUser();
         $user->assign('editor');
-        
+
         $post = factory(Post::class)->create();
 
         $this->actingAs($user);
