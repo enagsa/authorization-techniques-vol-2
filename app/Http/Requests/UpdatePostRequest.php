@@ -14,7 +14,7 @@ class UpdatePostRequest extends FormRequest
      */
     public function authorize()
     {
-        return Gate::allows('update', $this->post);
+        return true;
     }
 
     /**

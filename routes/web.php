@@ -23,9 +23,10 @@ Route::middleware('auth')
 	->group(function(){
 		Route::get('posts', 'PostController@index');
 		Route::post('posts', 'PostController@store');
+        Route::get('posts/create', 'PostController@create');
 		Route::get('posts/{post}/edit', 'PostController@edit')->name('posts.edit');
-		Route::put('posts/{post}', 'PostController@update');
-        Route::delete('posts/{post}', 'PostController@delete');
+		Route::put('posts/{post}', 'PostController@update')->where('post','\d+');
+        Route::delete('posts/{post}', 'PostController@destroy')->where('post','\d+');
 	});
 
 Auth::routes();

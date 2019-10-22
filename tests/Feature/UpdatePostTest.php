@@ -18,6 +18,10 @@ class UpdatePostTest extends TestCase
 
         $this->actingAs($admin);
 
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertSuccessful()
+            ->assertSee('Edit post');
+
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'
         ]);
@@ -42,6 +46,10 @@ class UpdatePostTest extends TestCase
 
         $this->actingAs($user);
 
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertSuccessful()
+            ->assertSee('Edit post');
+
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'
         ]);
@@ -56,13 +64,16 @@ class UpdatePostTest extends TestCase
     }
 
     /** @test */
-    function authors_can_update_posts_they_dont_own(){
+    function authors_cannot_update_posts_they_dont_own(){
         $user = $this->createUser();
         $user->assign('author');
 
         $post = factory(Post::class)->create();
 
         $this->actingAs($user);
+
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertStatus(403);;
 
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'
@@ -85,6 +96,10 @@ class UpdatePostTest extends TestCase
 
         $this->actingAs($user);
 
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertSuccessful()
+            ->assertSee('Edit post');
+
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'
         ]);
@@ -105,6 +120,9 @@ class UpdatePostTest extends TestCase
 
         $this->actingAs($user);
 
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertStatus(403);
+
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'
         ]);
@@ -120,6 +138,10 @@ class UpdatePostTest extends TestCase
     /** @test */
     function guests_cannot_update_posts(){
         $post = factory(Post::class)->create();
+
+        $this->get("admin/posts/{$post->id}/edit")
+            ->assertStatus(302)
+            ->assertRedirect(route('login'));
 
         $response = $this->put('admin/posts/'.$post->id, [
             'title' => 'Updated post title'

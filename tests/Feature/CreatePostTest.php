@@ -13,7 +13,12 @@ class CreatePostTest extends TestCase
 
     /** @test */
     function admins_can_create_posts(){
+        //$this->withoutExceptionHandling();
         $this->actingAs($admin = $this->createAdmin());
+
+        $this->get('admin/posts/create')
+            ->assertSuccessful()
+            ->assertSee('New post');
 
         $this->post('admin/posts', [
                 'title' => 'New post'
@@ -32,6 +37,10 @@ class CreatePostTest extends TestCase
         $this->actingAs($user = $this->createUser());
         $user->assign('author');
 
+        $this->get('admin/posts/create')
+            ->assertSuccessful()
+            ->assertSee('New post');
+
         $this->post('admin/posts', [
                 'title' => 'New post'
             ])
@@ -46,6 +55,9 @@ class CreatePostTest extends TestCase
     /** @test */
     function unauthorized_users_cannot_create_posts(){
         $this->actingAs($user = $this->createUser());
+
+        $this->get('admin/posts/create')
+            ->assertStatus(403);
 
         $this->post('admin/posts', [
                 'title' => 'New post'
